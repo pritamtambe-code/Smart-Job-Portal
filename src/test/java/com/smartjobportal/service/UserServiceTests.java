@@ -59,6 +59,33 @@ public class UserServiceTests {
         assertEquals("Pritam", users.get(0).getName());
 
     }
+    @Test
+    public void testtoupdate(){
+        User oldUser = new User();
+        oldUser.setId(1L);
+        oldUser.setName("MAHI");
+        oldUser.setEmail("old@email.com");
+        oldUser.setRole(User.Role.JOB_SEEKER);
+
+
+        User updatedUser = new User();
+        updatedUser.setId(1L);
+        updatedUser.setName("BHOLA");
+        updatedUser.setEmail("new@email.com");
+        updatedUser.setRole(User.Role.EMPLOYER);
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(oldUser));
+        when(userRepository.save(updatedUser)).thenReturn(updatedUser);
+
+        User result =userService.updateUser(1L, updatedUser);
+
+        assertNotNull(result);
+        assertEquals("BHOLA", result.getName());
+        assertEquals("new@email.com", result.getEmail());
+        assertEquals(User.Role.EMPLOYER, result.getRole());
+
+    }
+
 
 
 }
