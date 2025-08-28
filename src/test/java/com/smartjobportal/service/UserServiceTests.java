@@ -10,6 +10,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,4 +44,21 @@ public class UserServiceTests {
         assertEquals("joginder@EMAIL.COM", foundUser.getEmail());
         assertEquals(User.Role.EMPLOYER, foundUser.getRole());
     }
+    @Test
+    public void getAllUsers() {
+        User u1 = new User(1L, "Pritam", "pritam@gmail.com", User.Role.EMPLOYER);
+        User u2 = new User(2L, "Raj", "raj@gmail.com", User.Role.EMPLOYER);
+
+        when(userRepository.findAll()).thenReturn(Arrays.asList(u1, u2));
+
+        List<User> users = userService.getAllUsers();
+
+
+        assertNotNull(users);
+        assertEquals(2, users.size());
+        assertEquals("Pritam", users.get(0).getName());
+
+    }
+
+
 }
