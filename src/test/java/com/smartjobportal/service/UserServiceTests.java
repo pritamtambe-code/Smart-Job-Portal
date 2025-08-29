@@ -38,7 +38,7 @@ public class UserServiceTests {
 
         User foundUser = userService.getUserById(1L);
 
-        // Assert
+
         assertNotNull(foundUser);
         assertEquals("JOGINDER", foundUser.getName());
         assertEquals("joginder@EMAIL.COM", foundUser.getEmail());
@@ -84,6 +84,19 @@ public class UserServiceTests {
         assertEquals("new@email.com", result.getEmail());
         assertEquals(User.Role.EMPLOYER, result.getRole());
 
+    }
+    @Test
+    public void testCreateUser() {
+        User user = new User();
+        user.setId(1L);
+        user.setName("RAHUL");
+
+        when(userRepository.save(user)).thenReturn(user);
+
+        User savedUser = userService.createUser(user);
+
+        assertEquals(1L, savedUser.getId());
+        assertEquals("RAHUL", savedUser.getName());
     }
 
 
