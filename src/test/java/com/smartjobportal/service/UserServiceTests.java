@@ -3,6 +3,9 @@ package com.smartjobportal.service;
 import com.smartjobportal.model.User;
 import com.smartjobportal.repository.UserRepository;
 import com.smartjobportal.Service.UserService;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,13 +29,28 @@ public class UserServiceTests {
     @Mock
     private UserRepository userRepository;
 
-    @Test
-    public void findUserById() {
-        User user = new User();
+    private User user;
+
+
+    @BeforeAll
+    static void initAll() {
+        System.out.println("Tests for UserService");
+    }
+
+    @BeforeEach
+     public void setUp() {
+        user = new User();
         user.setId(1L);
         user.setName("JOGINDER");
         user.setEmail("joginder@EMAIL.COM");
         user.setRole(User.Role.EMPLOYER);
+
+        System.out.println(" Starting a new test with dummy user");
+    }
+
+
+    @Test
+    public void findUserById() {
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
@@ -115,11 +133,7 @@ public class UserServiceTests {
     }
     @Test
     public void testDeleteUser_UserNotFound() {
-        User user = new User();
-        user.setId(1L);
-        user.setName("MAHI");
-        user.setEmail("old@email.com");
-        user.setRole(User.Role.JOB_SEEKER);
+
 
         when(userRepository.existsById(user.getId())).thenReturn(false);
 
@@ -130,5 +144,9 @@ public class UserServiceTests {
         Mockito.verify(userRepository, Mockito.never()).deleteById(user.getId());
     }
 
+    @AfterAll
+    static void tearDownAll() {
+        System.out.println("Test Finished");
+    }
 
 }
