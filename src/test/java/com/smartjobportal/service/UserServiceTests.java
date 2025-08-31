@@ -77,7 +77,7 @@ public class UserServiceTests {
         when(userRepository.findById(1L)).thenReturn(Optional.of(oldUser));
         when(userRepository.save(updatedUser)).thenReturn(updatedUser);
 
-        User result =userService.updateUser(1L, updatedUser);
+        User result =userService.updateUser(oldUser.getId(), updatedUser);
 
         assertNotNull(result);
         assertEquals("BHOLA", result.getName());
@@ -98,7 +98,37 @@ public class UserServiceTests {
         assertEquals(1L, savedUser.getId());
         assertEquals("RAHUL", savedUser.getName());
     }
+    @Test
+    public void testDeleteUser_UserExists() {
+        User user = new User();
+        user.setId(1L);
+        user.setName("MAHI");
+        user.setEmail("old@email.com");
+        user.setRole(User.Role.JOB_SEEKER);
 
+        when(userRepository.existsById(user.getId())).thenReturn(true);
+
+        String result = userService.deleteUser(user.getId());
+        assertNotNull(result);
+        assertEquals("User deleted successfully!", result);
+        Mockito.verify(userRepository, Mockito.times(1)).deleteById(user.getId());
+    }
+    @Test
+    public void testDeleteUser_UserNotFound() {
+        User user = new User();
+        user.setId(1L);
+        user.setName("MAHI");
+        user.setEmail("old@email.com");
+        user.setRole(User.Role.JOB_SEEKER);
+
+        when(userRepository.existsById(user.getId())).thenReturn(false);
+
+        String result = userService.deleteUser(user.getId());
+
+        assertNotNull(result);
+        assertEquals("User not found!", result);
+        Mockito.verify(userRepository, Mockito.never()).deleteById(user.getId());
+    }
 
 
 }
